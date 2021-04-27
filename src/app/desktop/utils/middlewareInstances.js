@@ -41,10 +41,10 @@ const middleware = store => next => action => {
         // eslint-disable-next-line
         notification.open({
           key: 'nsfwNotWorking',
-          message: 'NSFW Error',
+          message: 'File Watcher Error',
           description: 'Node Sentinel File Watcher could not be initialized',
           top: 47,
-          duration: 10
+          duration: 45
         });
       }
     };

@@ -11,7 +11,7 @@ export const DEFAULT_JAVA_ARGS = `-Dfml.ignorePatchDiscrepancies=true -Dfml.igno
     ? '-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump'
     : ''
 } -Xms256m`;
-export const DEFAULT_MEMORY = 4096;
+export const DEFAULT_MEMORY = 6144;
 
 export const resolutionPresets = [
   '854x480',

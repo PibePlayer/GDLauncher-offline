@@ -8,7 +8,7 @@ exports.initRPC = () => {
   client = new Client({ transport: 'ipc' });
 
   activity = {
-    details: 'Playing KoalaLauncher',
+    details: 'Playing Koala Launcher',
     state: 'Idle',
     startTimestamp: Math.floor(Date.now() / 1000),
     largeImageKey: 'default_big',
@@ -21,7 +21,7 @@ exports.initRPC = () => {
     client.setActivity(activity);
   });
 
-  client.login({ clientId: '555898932467597312' }).catch(error => {
+  client.login({ clientId: '600470444893667328' }).catch(error => {
     if (error.message.includes('ENOENT')) {
       log.error('Unable to initialize Discord RPC, no client detected.');
     } else {

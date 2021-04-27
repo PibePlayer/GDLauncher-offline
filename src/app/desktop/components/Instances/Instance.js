@@ -98,7 +98,7 @@ const HoverContainer = styled.div`
   text-align: center;
   font-weight: 800;
   border-radius: 32px;
-  transition: opacity 150ms ease-in-out;
+  transition: opacity 500ms ease-in-out;
   width: 105%;
   height: 105%;
   opacity: ${p => (p.installing || p.isHovered ? '1' : '0')};

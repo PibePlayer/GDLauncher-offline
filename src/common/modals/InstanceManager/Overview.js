@@ -27,7 +27,7 @@ import {
 import { updateInstanceConfig } from '../../reducers/actions';
 import { openModal } from '../../reducers/modals/actions';
 import { convertMinutesToHumanTime } from '../../utils';
-import { CURSEFORGE } from '../../utils/constants';
+import { CURSEFORGE, FTB } from '../../utils/constants';
 
 const Container = styled.div`
   padding: 0 50px;
@@ -290,8 +290,9 @@ const Overview = ({ instanceName, background, manifest }) => {
             display: flex;
             justify-content: space-between;
             width: 100% + 20px;
-            margin-top: 20px;
+            margin-top: 15px;
             margin-left: -20px;
+            margin-bottom: 15px;
           `}
         >
           <Card
@@ -315,12 +316,38 @@ const Overview = ({ instanceName, background, manifest }) => {
               : ''}
           </Card>
         </OverviewCard>
+        {config?.loader.source === CURSEFORGE && manifest && (
+          <Card
+            title="Curse Modpack"
+            color={`linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), ${
+              background
+                ? `url(${background})`
+                : `url(${instanceDefaultBackground})`
+            }`}
+          >
+            {manifest?.name} - {manifest?.version}
+          </Card>
+        )}
+
+        {config?.loader.source === FTB && (
+          <Card
+            title="FTB Modpack"
+            color={`linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), ${
+              background
+                ? `url(${background})`
+                : `url(${instanceDefaultBackground})`
+            }`}
+          >
+            FTB Modpack
+          </Card>
+        )}
         <OverviewCard
           css={`
             display: flex;
             justify-content: space-between;
             width: 100%;
-            margin-bottom: 30px;
+            margin-top: 15px;
+            margin-bottom: 15px;
           `}
         >
           <Card
@@ -342,18 +369,6 @@ const Overview = ({ instanceName, background, manifest }) => {
             {config?.lastPlayed ? computeLastPlayed(config?.lastPlayed) : '-'}
           </Card>
         </OverviewCard>
-        {config?.loader.source === CURSEFORGE && manifest && (
-          <Card
-            title="Curse Modpack"
-            color={`linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), ${
-              background
-                ? `url(${background})`
-                : `url(${instanceDefaultBackground})`
-            }`}
-          >
-            {manifest?.name} - {manifest?.version}
-          </Card>
-        )}
         <RenameRow>
           <Input value={newName} onChange={e => setNewName(e.target.value)} />
           <RenameButton onClick={() => renameInstance()} type="primary">

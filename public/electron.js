@@ -112,7 +112,7 @@ try {
   // Do nothing
 }
 
-app.setPath('userData', path.join(app.getPath('appData'), 'gdlauncher_next'));
+app.setPath('userData', path.join(app.getPath('appData'), 'koalalauncher'));
 
 let allowUnstableReleases = false;
 const releaseChannelExists = fss.existsSync(

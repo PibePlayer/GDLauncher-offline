@@ -2874,7 +2874,7 @@ export const getAppLatestVersion = async () => {
 
   try {
     const rChannel = await fs.readFile(
-      path.join(appData, 'gdlauncher_next', 'rChannel')
+      path.join(appData, 'koalalauncher', 'rChannel')
     );
     releaseChannel = rChannel.toString();
   } catch {

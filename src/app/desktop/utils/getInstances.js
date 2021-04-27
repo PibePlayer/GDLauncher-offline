@@ -2,6 +2,7 @@ import path from 'path';
 import fse from 'fs-extra';
 import pMap from 'p-map';
 import { getDirectories } from '.';
+import { CURSEFORGE } from '../../../common/utils/constants';
 
 const getInstances = async instancesPath => {
   const mapFolderToInstance = async instance => {
@@ -19,8 +20,8 @@ const getInstances = async instancesPath => {
           loaderType,
           mcVersion,
           loaderVersion,
-          fileId,
-          addonId,
+          fileID,
+          projectID,
           source
         ] = config.modloader;
 
@@ -30,11 +31,13 @@ const getInstances = async instancesPath => {
             loaderType,
             mcVersion,
             ...(loaderVersion && { loaderVersion }),
-            ...(fileId && { fileID: fileId }),
-            ...(addonId && { projectID: addonId }),
-            ...(source && { source })
+            ...(fileID && { fileID }),
+            ...(projectID && { projectID }),
+            ...(!source && fileID && projectID && { source: CURSEFORGE })
           }
         };
+
+        delete patchedConfig.modloader;
 
         await fse.writeFile(configPath, JSON.stringify(patchedConfig));
 

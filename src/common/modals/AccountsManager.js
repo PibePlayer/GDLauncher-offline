@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Spin, message } from 'antd';
+import { Spin, Button, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -11,12 +11,10 @@ import {
   updateCurrentAccountId,
   loginWithAccessToken,
   updateAccount,
-  removeAccount,
-  loginWithOAuthAccessToken
+  removeAccount
 } from '../reducers/actions';
 import { load } from '../reducers/loading/actions';
 import features from '../reducers/loading/features';
-import { ACCOUNT_MICROSOFT } from '../utils/constants';
 
 const ProfileSettings = () => {
   const dispatch = useDispatch();
@@ -59,11 +57,7 @@ const ProfileSettings = () => {
                     dispatch(
                       load(
                         features.mcAuthentication,
-                        dispatch(
-                          account.accountType === ACCOUNT_MICROSOFT
-                            ? loginWithOAuthAccessToken(false)
-                            : loginWithAccessToken(false)
-                        )
+                        dispatch(loginWithAccessToken(false))
                       )
                     ).catch(() => {
                       dispatch(updateCurrentAccountId(currentId));
@@ -116,17 +110,26 @@ const ProfileSettings = () => {
                     }
                   `}
                 >
-                  <FontAwesomeIcon
+                  <Button
+                    type="primary"
                     onClick={async () => {
                       const result = await dispatch(
-                        removeAccount(account.selectedProfile.id)
+                        openModal('ActionConfirmation', {
+                          message:
+                            'Are you sure you want to remove this account?',
+                          confirmCallback: removeAccount(
+                            account.selectedProfile.id
+                          ),
+                          title: 'Confirm'
+                        })
                       );
                       if (!result) {
                         dispatch(closeModal());
                       }
                     }}
-                    icon={faTrash}
-                  />
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
                 </div>
               </AccountContainer>
             );
