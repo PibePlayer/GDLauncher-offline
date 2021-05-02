@@ -93,9 +93,8 @@ const Content = ({
                     Custom
                   </Radio.Button>
                   <Radio.Button value={1}>
-                    <img
-                      src={curseForgeIcon}
-                      width="20px"
+                    <FontAwesomeIcon
+                      icon={faFlame}
                       css={`
                         margin-right: 4px;
                         cursor: pointer;

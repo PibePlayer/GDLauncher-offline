@@ -4,6 +4,8 @@ import { Button } from 'antd';
 import { useDispatch } from 'react-redux';
 import Modal from '../../components/Modal';
 import General from './components/General';
+import Privacy from './components/Privacy';
+import Graphics from './components/Graphics';
 import Java from './components/Java';
 import CloseButton from '../../components/CloseButton';
 import { closeModal } from '../../reducers/modals/actions';
@@ -85,6 +87,10 @@ function Page(page) {
       return <General />;
     case 'Java':
       return <Java />;
+    case 'Privacy':
+      return <Privacy />;
+    case 'Graphics':
+      return <Graphics />;
     default:
       return null;
   }
@@ -124,12 +130,19 @@ export default function Settings() {
           >
             Java
           </SettingsButton>
-          {/* <SettingsButton onClick={() => setPage("User Interface")}>
-            User Interface
+          <SettingsButton
+            active={page === 'Privacy'}
+            onClick={() => setPage('Privacy')}
+          >
+            Privacy
           </SettingsButton>
           <SettingsTitle>Game Settings</SettingsTitle>
-          <SettingsButton>Graphic Settings</SettingsButton>
-          <SettingsButton>Sound Settings</SettingsButton> */}
+          <SettingsButton
+            active={page === 'Graphics'}
+            onClick={() => setPage('Graphics')}
+          >
+            Graphics Settings
+          </SettingsButton>
         </SideMenu>
         <SettingsContainer>
           <SettingsColumn>
