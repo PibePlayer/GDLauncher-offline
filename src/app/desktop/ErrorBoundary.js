@@ -52,7 +52,7 @@ export default class ErrorBoundary extends React.Component {
               color: ${props => props.theme.palette.text.primary};
             `}
           >
-            WE’RE SSSSSSORRY. KoalaLauncher ran into a creeper and blew up..
+            Koala Launcher experienced a fatal error.
           </h1>
           <div
             css={`

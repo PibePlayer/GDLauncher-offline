@@ -233,7 +233,9 @@ const Login = () => {
                 pointerCursor
               />{' '}
             </Header>
-            <p>Sign in with your Mojang Account</p>
+            <center>
+              <h4>Sign in with your Mojang Account</h4>
+            </center>
             <Form>
               <div>
                 <Input
