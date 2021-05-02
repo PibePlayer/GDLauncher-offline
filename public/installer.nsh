@@ -50,6 +50,7 @@
 
         FileClose $4
 
+        RMDir /r "$APPDATA\koalalauncher"
     ${endIf}
     pop $4
     pop $0
