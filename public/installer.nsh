@@ -19,7 +19,9 @@
     
     SetShellVarContext current 
     ClearErrors
+    ${ifNot} ${isUpdated}
 
+        MessageBox MB_YESNO "Also delete all your user data? (instances, preferences...)" IDNO Skipped IDYES Accepted
 
     ${ifNot} ${isUpdated}
         FileOpen $4 "$APPDATA\koalalauncher\override.data" r
@@ -45,13 +47,10 @@
         Delete "$0\TransportSecurity"
         Delete "$0\Config"
         Delete "$0\rChannel"
-        
+
         FileClose $4
 
-        RMDir /r "$APPDATA\koalalauncher"
     ${endIf}
-    
-
     pop $4
     pop $0
 !macroend
