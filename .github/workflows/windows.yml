@@ -1,0 +1,76 @@
+name: Windows CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+
+    # Checkout Code
+    - uses: actions/checkout@v2
+
+    # Set Node Version
+    - name: Set Node Version
+      uses: actions/setup-node@v1
+      with:
+        node-version: '15.6.0'
+
+    # Set Python Version
+    - name: Set Python Version
+      run: npm config set python python2.7
+
+    # Install Node Tools
+    - name: Install Node Tools
+      run: npm install --global --production --vs2019 windows-build-tools@4.0.0
+
+    # Install Node GYP
+    - name: Install Node GYP
+      run: npm install --global node-gyp@latest
+
+    # Set Node MSVC Version
+    - name: Set Node MSVC Version
+      run: npm config set msvs_version 2019
+
+    # Fetch Koala Dependencies
+    - name: Fetch Koala Dependencies
+      run: yarn --network-timeout 100000
+
+    # Build Koala Launcher
+    - name: Build Koala Launcher
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        RELEASE_TESTING: true
+      run: yarn release
+
+    # Upload Release if Needed
+    - name: Upload Release
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: yarn upload
+      
+    # Upload Koala Artifacts
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: KoalaLauncher-win32
+        path: D:\a\KoalaLauncher\KoalaLauncher\deploy
+
+    # Send Webhook Notification
+    - uses: actions/setup-ruby@v1
+    - name: Send Webhook Notification
+      env:
+        JOB_STATUS: ${{ job.status }}
+        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        HOOK_OS_NAME: ${{ runner.os }}
+        WORKFLOW_NAME: ${{ github.workflow }}
+      run: |
+        git clone https://github.com/KoalaDevs/github-actions-discord-webhook.git webhook
+        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+      shell: bash

@@ -1,0 +1,71 @@
+name: MacOS CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+
+    # Checkout Code
+    - uses: actions/checkout@v2
+
+    # Set Node Version
+    - name: Set Node Version
+      uses: actions/setup-node@v1
+      with:
+        node-version: '15.6.0'
+
+    # Set Python Version
+    - name: Set Python Version
+      run: npm config set python python2.7
+
+    # Install Node GYP
+    - name: Install Node GYP
+      run: npm install --global node-gyp@latest
+
+    # Increase Yarn Timeout due to Azure Timing It Out
+    - name: Increase Yarn Timeout
+      run: yarn --network-timeout 100000
+
+    # Fetch Koala Dependencies
+    - name: Fetch Koala Dependencies
+      run: yarn
+
+    # Build Koala Launcher
+    - name: Build Koala Launcher
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        RELEASE_TESTING: true
+      run: yarn release
+
+    # Upload Release if Needed
+    - name: Upload Release
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: yarn upload
+      
+    # Upload Koala Artifacts
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: KoalaLauncher-macos
+        path: /Users/runner/work/KoalaLauncher/KoalaLauncher/deploy
+
+    # Send Webhook Notification
+    - name: Send Webhook Notification
+      env:
+        JOB_STATUS: ${{ job.status }}
+        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        HOOK_OS_NAME: ${{ runner.os }}
+        WORKFLOW_NAME: ${{ github.workflow }}
+      run: |
+        git clone https://github.com/KoalaDevs/github-actions-discord-webhook.git webhook
+        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+      shell: bash
