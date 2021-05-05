@@ -12,7 +12,7 @@ import { _getTempPath } from '../../utils/selectors';
 import { useSelector } from 'react-redux';
 import { getAddon, getAddonFiles } from '../../api';
 import { downloadFile } from '../../../app/desktop/utils/downloader';
-import { FABRIC, FORGE, VANILLA } from '../../utils/constants';
+import { CURSEFORGE, FABRIC, FORGE, VANILLA } from '../../utils/constants';
 import { transparentize } from 'polished';
 
 const Import = ({
@@ -50,7 +50,6 @@ const Import = ({
 
     const tempFilePath = path.join(tempPath, path.basename(localValue));
 
-
     if (isUrlRegex) {
       try {
         await fs.access(tempFilePath);
@@ -83,6 +82,7 @@ const Import = ({
         $cherryPick: 'manifest.json'
       }
     );
+
     await new Promise((resolve, reject) => {
       extraction.on('end', () => {
         resolve();
@@ -96,12 +96,13 @@ const Import = ({
     const manifest = await fse.readJson(path.join(tempPath, 'manifest.json'));
     await fse.remove(path.join(tempPath, 'manifest.json'));
     let addon = null;
+
     if (manifest.projectID) {
       const { data } = await getAddon(manifest.projectID);
       addon = data;
       setModpack(addon);
     } else {
-      setModpack({ name: manifest.name });
+      setModpack({ name: manifest.name, attachments: [] });
     }
     const isForge = (manifest?.minecraft?.modLoaders || []).find(
       v => v.id.includes(FORGE) && v.primary
@@ -121,17 +122,20 @@ const Import = ({
       return;
     }
 
-    const modloader = [];
-    if (isForge) modloader.push(FORGE);
-    else if (isFabric) modloader.push(FABRIC);
-    else if (isVanilla) modloader.push(VANILLA);
+    const loader = { loaderType: VANILLA };
 
-    if (manifest.projectID) {
-      modloader.push(manifest.projectID);
-      modloader.push(null);
+    if (manifest.manifestType === 'minecraftModpack') {
+      loader.source = CURSEFORGE;
     }
 
-    setVersion(modloader);
+    if (isForge) loader.loaderType = FORGE;
+    else if (isFabric) loader.loaderType = FABRIC;
+
+    if (manifest.projectID) {
+      loader.projectID = manifest.projectID;
+    }
+
+    setVersion(loader);
     if (isUrlRegex) {
       setImportZipPath(tempFilePath);
     }

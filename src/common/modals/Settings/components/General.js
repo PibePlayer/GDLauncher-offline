@@ -15,7 +15,8 @@ import {
   faToilet,
   faNewspaper,
   faFolder,
-  faFire
+  faFire,
+  faAd
 } from '@fortawesome/free-solid-svg-icons';
 import { Select, Tooltip, Button, Switch, Input, Checkbox } from 'antd';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
@@ -27,6 +28,7 @@ import {
 } from '../../../utils/selectors';
 import {
   updateDiscordRPC,
+  updateHideAds,
   updateHideWindowOnGameLaunch,
   updatePotatoPcMode,
   updateShowNews,
@@ -217,6 +219,7 @@ const General = () => {
     state => state.settings.hideWindowOnGameLaunch
   );
   const DiscordRPC = useSelector(state => state.settings.discordRPC);
+  const HideAds = useSelector(state => state.settings.hideAds);
   const potatoPcMode = useSelector(state => state.settings.potatoPcMode);
   const concurrentDownloads = useSelector(
     state => state.settings.concurrentDownloads
@@ -486,6 +489,29 @@ const General = () => {
             }
           }}
           checked={DiscordRPC}
+        />
+      </DiscordRpc>
+      <Hr />
+      <Title
+        css={`
+          margin-top: 0px;
+        `}
+      >
+        Hide ADs &nbsp; <FontAwesomeIcon icon={faAd} />
+      </Title>
+      <DiscordRpc>
+        <p
+          css={`
+            width: 350px;
+          `}
+        >
+          Hide / enable ads (top banner)
+        </p>
+        <Switch
+          onChange={e => {
+            dispatch(updateHideAds(e));
+          }}
+          checked={HideAds}
         />
       </DiscordRpc>
       <Hr />

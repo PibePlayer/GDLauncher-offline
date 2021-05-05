@@ -12,7 +12,8 @@ import {
   MICROSOFT_LIVE_LOGIN_URL,
   MICROSOFT_XBOX_LOGIN_URL,
   MICROSOFT_XSTS_AUTH_URL,
-  MINECRAFT_SERVICES_URL
+  MINECRAFT_SERVICES_URL,
+  FTB_API_URL
 } from './utils/constants';
 import { sortByDate } from './utils';
 
@@ -29,14 +30,15 @@ export const msExchangeCodeForAccessToken = (
     qs.stringify({
       grant_type: 'authorization_code',
       client_id: clientId,
-      scope: 'xboxlive.signin xboxlive.offline_access',
+      scope: 'offline_access xboxlive.signin xboxlive.offline_access',
       redirect_uri: redirectUrl,
       code,
       code_verifier: codeVerifier
     }),
     {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Skip-Origin': 'skip'
       }
     }
   );
@@ -95,13 +97,14 @@ export const msOAuthRefresh = (clientId, refreshToken) => {
     `${MICROSOFT_LIVE_LOGIN_URL}/oauth20_token.srf`,
     qs.stringify({
       grant_type: 'refresh_token',
-      scope: 'xboxlive.signin xboxlive.offline_access',
+      scope: 'offline_access xboxlive.signin xboxlive.offline_access',
       client_id: clientId,
       refresh_token: refreshToken
     }),
     {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Skip-Origin': 'skip'
       }
     }
   );
@@ -184,7 +187,7 @@ export const getMcManifest = () => {
 };
 
 export const getForgeManifest = () => {
-  const url = `https://files.minecraftforge.net/maven/net/minecraftforge/forge/maven-metadata.json?timestamp=${new Date().getTime()}`;
+  const url = `https://files.minecraftforge.net/net/minecraftforge/forge/maven-metadata.json?timestamp=${new Date().getTime()}`;
   return axios.get(url);
 };
 
@@ -198,18 +201,18 @@ export const getJavaManifest = () => {
   return axios.get(url);
 };
 
-export const getFabricJson = ([, version, loader]) => {
+export const getFabricJson = ({ mcVersion, loaderVersion }) => {
   return axios.get(
     `${FABRIC_APIS}/versions/loader/${encodeURIComponent(
-      version
-    )}/${encodeURIComponent(loader)}/profile/json`
+      mcVersion
+    )}/${encodeURIComponent(loaderVersion)}/profile/json`
   );
 };
 
 // FORGE ADDONS
 
-export const getAddon = addonID => {
-  const url = `${FORGESVC_URL}/addon/${addonID}`;
+export const getAddon = projectID => {
+  const url = `${FORGESVC_URL}/addon/${projectID}`;
   return axios.get(url);
 };
 
@@ -218,21 +221,21 @@ export const getMultipleAddons = async addons => {
   return axios.post(url, addons);
 };
 
-export const getAddonFiles = addonID => {
-  const url = `${FORGESVC_URL}/addon/${addonID}/files`;
+export const getAddonFiles = projectID => {
+  const url = `${FORGESVC_URL}/addon/${projectID}/files`;
   return axios.get(url).then(res => ({
     ...res,
     data: res.data.sort(sortByDate)
   }));
 };
 
-export const getAddonDescription = addonID => {
-  const url = `${FORGESVC_URL}/addon/${addonID}/description`;
+export const getAddonDescription = projectID => {
+  const url = `${FORGESVC_URL}/addon/${projectID}/description`;
   return axios.get(url);
 };
 
-export const getAddonFile = (addonID, fileID) => {
-  const url = `${FORGESVC_URL}/addon/${addonID}/file/${fileID}`;
+export const getAddonFile = (projectID, fileID) => {
+  const url = `${FORGESVC_URL}/addon/${projectID}/file/${fileID}`;
   return axios.get(url);
 };
 
@@ -241,8 +244,8 @@ export const getAddonsByFingerprint = fingerprints => {
   return axios.post(url, fingerprints);
 };
 
-export const getAddonFileChangelog = (addonID, fileID) => {
-  const url = `${FORGESVC_URL}/addon/${addonID}/file/${fileID}/changelog`;
+export const getAddonFileChangelog = (projectID, fileID) => {
+  const url = `${FORGESVC_URL}/addon/${projectID}/file/${fileID}/changelog`;
   return axios.get(url);
 };
 
@@ -273,4 +276,43 @@ export const getSearch = (
     gameVersion: gameVersion || ''
   };
   return axios.get(url, { params });
+};
+
+export const getFTBModpackData = async modpackId => {
+  try {
+    const url = `${FTB_API_URL}/modpack/${modpackId}`;
+    const { data } = await axios.get(url);
+    return data;
+  } catch {
+    return { status: 'error' };
+  }
+};
+
+export const getFTBModpackVersionData = async (modpackId, versionId) => {
+  try {
+    const url = `${FTB_API_URL}/modpack/${modpackId}/${versionId}`;
+    const { data } = await axios.get(url);
+    return data;
+  } catch {
+    return { status: 'error' };
+  }
+};
+export const getFTBChangelog = async (modpackId, versionId) => {
+  try {
+    const url = `https://api.modpacks.ch/public/modpack/${modpackId}/${versionId}/changelog`;
+    const { data } = await axios.get(url);
+    return data;
+  } catch {
+    return { status: 'error' };
+  }
+};
+
+export const getFTBMostPlayed = async () => {
+  const url = `${FTB_API_URL}/modpack/popular/plays/1000`;
+  return axios.get(url);
+};
+
+export const getFTBSearch = async searchText => {
+  const url = `${FTB_API_URL}/modpack/search/1000?term=${searchText}`;
+  return axios.get(url);
 };

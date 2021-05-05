@@ -111,7 +111,7 @@ export const librariesMapper = (libraries, librariesPath) => {
           let { url } = lib.downloads.artifact;
           // Handle special case for forge universal where the url is "".
           if (lib.downloads.artifact.url === '') {
-            url = `https://files.minecraftforge.net/maven/${mavenToArray(
+            url = `https://files.minecraftforge.net/${mavenToArray(
               lib.name
             ).join('/')}`;
           }
@@ -394,10 +394,6 @@ export const getJVMArguments112 = (
   args.push(`-Dminecraft.applet.TargetDirectory="${instancePath}"`);
 
   args.push(mcJson.mainClass);
-  if (resolution) {
-    args.push(`--width ${resolution.width}`);
-    args.push(`--height ${resolution.height}`);
-  }
 
   const mcArgs = mcJson.minecraftArguments.split(' ');
   const argDiscovery = /\${*(.*)}/;
@@ -454,6 +450,11 @@ export const getJVMArguments112 = (
 
   args.push(...mcArgs);
 
+  if (resolution) {
+    args.push(`--width ${resolution.width}`);
+    args.push(`--height ${resolution.height}`);
+  }
+
   return args;
 };
 
@@ -483,11 +484,6 @@ export const getJVMArguments113 = (
   args.push(...jvmOptions);
 
   args.push(mcJson.mainClass);
-
-  if (resolution) {
-    args.push(`--width ${resolution.width}`);
-    args.push(`--height ${resolution.height}`);
-  }
 
   args.push(...mcJson.arguments.game.filter(v => !skipLibrary(v)));
 
@@ -563,6 +559,11 @@ export const getJVMArguments113 = (
         }
       }
     }
+  }
+
+  if (resolution) {
+    args.push(`--width ${resolution.width}`);
+    args.push(`--height ${resolution.height}`);
   }
 
   args = args.filter(arg => {
@@ -717,8 +718,8 @@ export const importAddonZip = async (
   return manifest;
 };
 
-export const downloadAddonZip = async (id, fileId, instancePath, tempPath) => {
-  const { data } = await getAddonFile(id, fileId);
+export const downloadAddonZip = async (id, fileID, instancePath, tempPath) => {
+  const { data } = await getAddonFile(id, fileID);
   const instanceManifest = path.join(instancePath, 'manifest.json');
   const zipFile = path.join(tempPath, 'addon.zip');
   await downloadFile(zipFile, data.downloadUrl);
@@ -753,11 +754,15 @@ export const getPlayerSkin = async uuid => {
 };
 
 export const extractFace = async buffer => {
-  const image = await jimp.read(buffer);
-  image.crop(8, 8, 8, 8);
-  image.scale(10, jimp.RESIZE_NEAREST_NEIGHBOR);
-  const imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
-  return imageBuffer.toString('base64');
+  const face = await jimp.read(buffer);
+  const hat = await jimp.read(buffer);
+  face.crop(8, 8, 8, 8);
+  hat.crop(40, 8, 8, 8);
+  face.scale(10, jimp.RESIZE_NEAREST_NEIGHBOR);
+  hat.scale(10, jimp.RESIZE_NEAREST_NEIGHBOR);
+  face.composite(hat, 0, 0);
+  const ImageBuffer = await face.getBufferAsync(jimp.MIME_PNG);
+  return ImageBuffer.toString('base64');
 };
 
 export const normalizeModData = (data, projectID, modName) => {
@@ -768,8 +773,6 @@ export const normalizeModData = (data, projectID, modName) => {
     temp.projectID = projectID;
     temp.fileID = data.id;
     delete temp.id;
-    delete temp.projectId;
-    delete temp.fileId;
   }
   return temp;
 };
@@ -882,7 +885,7 @@ export const convertcurseForgeToCanonical = (
 };
 
 export const getPatchedInstanceType = instance => {
-  const isForge = instance.modloader[0] === FORGE;
+  const isForge = instance.loader?.loaderType === FORGE;
   const hasJumpLoader = (instance.mods || []).find(v => v.projectID === 361988);
   if (isForge && !hasJumpLoader) {
     return FORGE;

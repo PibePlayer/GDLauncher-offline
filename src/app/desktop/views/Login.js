@@ -10,7 +10,7 @@ import {
   faCheckCircle,
   faExternalLinkAlt
 } from '@fortawesome/free-solid-svg-icons';
-import { Input, Button } from 'antd';
+import { Input, Button, Checkbox } from 'antd';
 import { useKey } from 'rooks';
 import axios from 'axios';
 import { login, loginOAuth } from '../../../common/reducers/actions';
@@ -172,6 +172,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [offlineMode, setOfflineMode] = useState(false);
   const [version, setVersion] = useState(null);
   const [loginFailed, setLoginFailed] = useState(false);
   const [status, setStatus] = useState({});
@@ -184,7 +185,10 @@ const Login = () => {
     dispatch(requesting('accountAuthentication'));
     setTimeout(() => {
       dispatch(
-        load(features.mcAuthentication, dispatch(login(email, password)))
+        load(
+          features.mcAuthentication,
+          dispatch(login(email, password, offlineMode))
+        )
       ).catch(e => {
         console.error(e);
         setLoginFailed(e);
@@ -245,6 +249,9 @@ const Login = () => {
                   onChange={({ target: { value } }) => setPassword(value)}
                 />
               </div>
+              <Checkbox onChange={mode => setOfflineMode(mode)}>
+                Offline mode
+              </Checkbox>
               {loginFailed && (
                 <LoginFailMessage>{loginFailed?.message}</LoginFailMessage>
               )}

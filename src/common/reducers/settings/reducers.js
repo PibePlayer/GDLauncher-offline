@@ -43,6 +43,15 @@ function discordRPC(state = true, action) {
   }
 }
 
+function hideAds(state = true, action) {
+  switch (action.type) {
+    case ActionTypes.UPDATE_HIDE_ADS:
+      return action.val;
+    default:
+      return state;
+  }
+}
+
 function hideWindowOnGameLaunch(state = false, action) {
   switch (action.type) {
     case ActionTypes.HIDE_WINDOW_ON_GAME_LAUNCH:
@@ -120,6 +129,7 @@ export default combineReducers({
   releaseChannel,
   concurrentDownloads,
   discordRPC,
+  hideAds,
   hideWindowOnGameLaunch,
   potatoPcMode,
   showNews,

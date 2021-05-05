@@ -90,6 +90,15 @@ export function updateDiscordRPC(val) {
   };
 }
 
+export function updateHideAds(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_HIDE_ADS,
+      val
+    });
+  };
+}
+
 export function updateCurseReleaseChannel(curseReleaseChannel) {
   return dispatch => {
     dispatch({
