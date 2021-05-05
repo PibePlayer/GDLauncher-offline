@@ -46,7 +46,7 @@ jobs:
           CIRCLE_TAG: ''
           BITRISE_GIT_TAG: ''
           CI_BUILD_TAG: ''
-          RELEASE_TESTING: true
+          RELEASE_TESTING: false
         run: |
           npm run release
       - name: npm run release for mac and linux
@@ -58,7 +58,7 @@ jobs:
           CIRCLE_TAG: ''
           BITRISE_GIT_TAG: ''
           CI_BUILD_TAG: ''
-          RELEASE_TESTING: true
+          RELEASE_TESTING: false
         run: |
           npm run release
       - name: upload release to gh releases
