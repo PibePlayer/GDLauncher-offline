@@ -53,6 +53,7 @@ You need the following software installed:
 - (Rust)[https://www.rust-lang.org/]
 - A C++ Compiler ((GCC)[https://gcc.gnu.org/] or (MSVC)[https://visualstudio.microsoft.com/downloads/])
 - (Yarn)[http://yarnpkg.com/]
+- (Firefox)[https://www.mozilla.org/en-US/firefox/new/]
 
 ### ⏩ Steps
 
@@ -64,7 +65,7 @@ yarn
 #### Start the Development environment
 
 ```zsh
-yarn
+yarn start
 ```
 
 #### Packaging
