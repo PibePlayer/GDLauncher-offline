@@ -57,11 +57,6 @@ You need the following software installed:
 *   [Python2](https://www.python.org/)(Mac and linux)
 *   C++ compiler (g++ or windows build tools)
 
-You will need some the following font installed too:
-
-* Averia Sans Libre
-
-
 ### [](#️-steps)![arrow_forward](https://github.githubassets.com/images/icons/emoji/unicode/25b6.png) Steps
 
 Install the dependencies and devDependencies.
