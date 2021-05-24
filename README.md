@@ -50,7 +50,6 @@ To download the latest version, you can either click [here](https://github.com/K
 You need the following software installed:
 
 - [NodeJS](https://nodejs.org/) (> v14.8.0 x64)
-  - orginal-fs
 - (Rust)[https://www.rust-lang.org/]
 - A C++ Compiler ((GCC)[https://gcc.gnu.org/] or (MSVC)[https://visualstudio.microsoft.com/downloads/])
 - (Yarn)[http://yarnpkg.com/]
