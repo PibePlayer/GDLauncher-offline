@@ -77,7 +77,13 @@ const modalsComponentLookupTable = {
   )
 };
 
-const ModalContainer = ({ unmounting, children, preventClose, modalType }) => {
+const ModalContainer = ({
+  unmounting,
+  children,
+  preventClose,
+  modalType,
+  closeCallback
+}) => {
   const [modalStyle, setModalStyle] = useState({
     transform: `scale(${modalType === 'Settings' ? 2 : 0})`,
     opacity: 0
@@ -110,6 +116,7 @@ const ModalContainer = ({ unmounting, children, preventClose, modalType }) => {
       }, 500);
       return;
     }
+    if (closeCallback) closeCallback();
     dispatch(closeModal());
   };
 
@@ -157,6 +164,7 @@ const ModalsManager = () => {
         unmounting={unmounting}
         key={modalType}
         preventClose={modalProps.preventClose}
+        closeCallback={modalProps.abortCallback}
         modalType={modalType}
       >
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
