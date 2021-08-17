@@ -4,11 +4,12 @@ import { Button } from 'antd';
 import { useDispatch } from 'react-redux';
 import Modal from '../../components/Modal';
 import General from './components/General';
-import Privacy from './components/Privacy';
-import Graphics from './components/Graphics';
 import Java from './components/Java';
 import CloseButton from '../../components/CloseButton';
+import SocialButtons from '../../components/SocialButtons';
 import { closeModal } from '../../reducers/modals/actions';
+import KoFiButton from '../../assets/ko-fi.png';
+import PatreonButton from '../../assets/patreon.png';
 
 const Container = styled.div`
   display: flex;
@@ -16,6 +17,13 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   text-align: center;
+
+  .ant-slider-mark-text,
+  .ant-input,
+  .ant-select-selection-search-input,
+  .ant-btn {
+    -webkit-backface-visibility: hidden;
+  }
 `;
 const SideMenu = styled.div`
   flex: 0;
@@ -87,10 +95,6 @@ function Page(page) {
       return <General />;
     case 'Java':
       return <Java />;
-    case 'Privacy':
-      return <Privacy />;
-    case 'Graphics':
-      return <Graphics />;
     default:
       return null;
   }
@@ -130,19 +134,12 @@ export default function Settings() {
           >
             Java
           </SettingsButton>
-          <SettingsButton
-            active={page === 'Privacy'}
-            onClick={() => setPage('Privacy')}
-          >
-            Privacy
+          {/* <SettingsButton onClick={() => setPage("User Interface")}>
+            User Interface
           </SettingsButton>
           <SettingsTitle>Game Settings</SettingsTitle>
-          <SettingsButton
-            active={page === 'Graphics'}
-            onClick={() => setPage('Graphics')}
-          >
-            Graphics Settings
-          </SettingsButton>
+          <SettingsButton>Graphic Settings</SettingsButton>
+          <SettingsButton>Sound Settings</SettingsButton> */}
         </SideMenu>
         <SettingsContainer>
           <SettingsColumn>

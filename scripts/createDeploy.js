@@ -100,6 +100,7 @@ const createDeployFiles = async () => {
 };
 
 const commonConfig = {
+  publish: [],
   config: {
     publish: {
       owner: 'KoalaDevs',

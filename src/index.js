@@ -12,9 +12,8 @@ import RootElectron from './Root-Electron';
 import ModalsManager from './common/components/ModalsManager';
 
 import 'typeface-roboto';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import '@fontsource/averia-sans-libre';
-import ErrorBoundary from './app/desktop/ErrorBoundary';
+import 'inter-ui';
+import ErrorBoundary from './common/ErrorBoundary';
 
 const Root =
   // eslint-disable-next-line no-nested-ternary

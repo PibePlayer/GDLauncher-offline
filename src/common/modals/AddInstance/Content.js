@@ -206,7 +206,7 @@ const Content = ({
   );
 };
 
-export default React.memo(Content);
+export default Content;
 
 const Animation = styled.div`
   transition: 0.2s ease-in-out;
