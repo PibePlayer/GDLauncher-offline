@@ -5,11 +5,10 @@ import { useDispatch } from 'react-redux';
 import Modal from '../../components/Modal';
 import General from './components/General';
 import Java from './components/Java';
+import Privacy from './components/Privacy';
+import Graphics from './components/Graphics';
 import CloseButton from '../../components/CloseButton';
-import SocialButtons from '../../components/SocialButtons';
 import { closeModal } from '../../reducers/modals/actions';
-import KoFiButton from '../../assets/ko-fi.png';
-import PatreonButton from '../../assets/patreon.png';
 
 const Container = styled.div`
   display: flex;
@@ -95,6 +94,10 @@ function Page(page) {
       return <General />;
     case 'Java':
       return <Java />;
+    case 'Privacy':
+      return <Privacy />;
+    case 'Graphics':
+      return <Graphics />;
     default:
       return null;
   }
@@ -134,12 +137,19 @@ export default function Settings() {
           >
             Java
           </SettingsButton>
-          {/* <SettingsButton onClick={() => setPage("User Interface")}>
-            User Interface
+          <SettingsButton
+            active={page === 'Privacy'}
+            onClick={() => setPage('Privacy')}
+          >
+            Privacy
           </SettingsButton>
           <SettingsTitle>Game Settings</SettingsTitle>
-          <SettingsButton>Graphic Settings</SettingsButton>
-          <SettingsButton>Sound Settings</SettingsButton> */}
+          <SettingsButton
+            active={page === 'Graphics'}
+            onClick={() => setPage('Graphics')}
+          >
+            Graphics Settings
+          </SettingsButton>
         </SideMenu>
         <SettingsContainer>
           <SettingsColumn>
