@@ -36,6 +36,7 @@ export const FABRIC_APIS = 'https://meta.fabricmc.net/v2';
 export const FABRIC = 'fabric';
 export const FORGE = 'forge';
 export const VANILLA = 'vanilla';
+export const LITELOADER = 'liteloader';
 
 // Sources
 export const CURSEFORGE = 'curseforge';

@@ -56,7 +56,7 @@ const Home = () => {
     setTimeout(() => {
       setInitScrolled(true);
       executeScroll(1);
-    }, 4800);
+    }, 1200);
   }, []);
 
   return (

@@ -161,7 +161,7 @@
     "electron-store": "^8.0.0",
     "electron-updater": "^4.3.9",
     "fast-xml-parser": "^3.19.0",
-    "@fontsource/averia-sans-libre/": "^4.1.0",
+    "@fontsource/averia-sans-libre": "^4.1.0",
     "fs-extra": "^10.0.0",
     "get-stream": "^6.0.1",
     "history": "^4.10.1",

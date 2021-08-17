@@ -10,13 +10,7 @@ localForage.config({
 
 export default {
   key: 'root',
-  storage: createElectronStorage({
-    electronStoreOpts: {
-      name: 'config',
-      // This is used to ensure integrity, not for security reasons
-      encryptionKey: 'KoalaLauncher',
-      fileExtension: ''
-    }
-  }),
-  whitelist: ['settings', 'app']
+  storage: localForage,
+  whitelist: ['settings', 'app'],
+  stateReconciler: autoMergeLevel2
 };
