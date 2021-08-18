@@ -24,7 +24,10 @@ import {
   DEFAULT_JAVA_ARGS,
   resolutionPresets
 } from '../../../app/desktop/utils/constants';
-import { updateInstanceConfig } from '../../reducers/actions';
+import {
+  getJavaVersionForMCVersion,
+  updateInstanceConfig
+} from '../../reducers/actions';
 import { openModal } from '../../reducers/modals/actions';
 import { convertMinutesToHumanTime } from '../../utils';
 import { CURSEFORGE, FTB } from '../../utils/constants';
@@ -174,9 +177,12 @@ const Card = memo(
 );
 
 const Overview = ({ instanceName, background, manifest }) => {
+  const dispatch = useDispatch();
   const instancesPath = useSelector(_getInstancesPath);
   const config = useSelector(state => _getInstance(state)(instanceName));
-  const defaultJavaPath = useSelector(state => _getJavaPath(state));
+  const javaVersion = dispatch(
+    getJavaVersionForMCVersion(config?.loader.mcVersion)
+  );
   const [javaLocalMemory, setJavaLocalMemory] = useState(config?.javaMemory);
   const [javaLocalArguments, setJavaLocalArguments] = useState(
     config?.javaArgs
@@ -186,8 +192,6 @@ const Overview = ({ instanceName, background, manifest }) => {
   const [screenResolution, setScreenResolution] = useState(null);
   const [height, setHeight] = useState(config?.resolution?.height);
   const [width, setWidth] = useState(config?.resolution?.width);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     ipcRenderer
@@ -538,7 +542,7 @@ const Overview = ({ instanceName, background, manifest }) => {
             </JavaManagerRow>
           )}
           <JavaManagerRow>
-            <div>Custom Java Path</div>
+            <div>Custom Java Path {`<Java ${javaVersion}>`} </div>
             <Switch
               checked={customJavaPath}
               onChange={v => {

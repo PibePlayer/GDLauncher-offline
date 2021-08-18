@@ -14,7 +14,8 @@ import {
   MICROSOFT_XSTS_AUTH_URL,
   MINECRAFT_SERVICES_URL,
   FTB_API_URL,
-  PASTEBIN_API_KEY
+  PASTEBIN_API_KEY,
+  JAVA16_MANIFEST_URL
 } from './utils/constants';
 import { sortByDate } from './utils';
 
@@ -165,7 +166,7 @@ export const imgurPost = (image, onProgress) => {
 
   return axios.post('https://api.imgur.com/3/image', bodyFormData, {
     headers: {
-      Authorization: `Client-ID ${IMGUR_API_KEY}`
+      Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
     },
     ...(onProgress && { onUploadProgress: onProgress })
   });
@@ -223,6 +224,11 @@ export const getLiteLoaderManifest = () => {
 
 export const getJavaManifest = () => {
   const url = JAVA_MANIFEST_URL;
+  return axios.get(url);
+};
+
+export const getJava16Manifest = () => {
+  const url = JAVA16_MANIFEST_URL;
   return axios.get(url);
 };
 

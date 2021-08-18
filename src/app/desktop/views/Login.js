@@ -8,8 +8,7 @@ import {
   faArrowRight,
   faExclamationCircle,
   faCheckCircle,
-  faExternalLinkAlt,
-  faSpinner
+  faExternalLinkAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { Input, Button } from 'antd';
 import { useKey } from 'rooks';
@@ -18,7 +17,7 @@ import { login, loginOAuth } from '../../../common/reducers/actions';
 import { load, requesting } from '../../../common/reducers/loading/actions';
 import features from '../../../common/reducers/loading/features';
 import backgroundVideo from '../../../common/assets/background.webm';
-import HorizontalLogo from '../../../ui/HorizontalLogo.png';
+import HorizontalLogo from '../../../ui/HorizontalLogo';
 import { openModal } from '../../../common/reducers/modals/actions';
 
 const LoginButton = styled(Button)`
@@ -28,7 +27,7 @@ const LoginButton = styled(Button)`
     props.active ? props.theme.palette.grey[600] : 'transparent'};
   border: 0;
   height: auto;
-  margin-top: 40px;
+  margin-top: 20px;
   text-align: center;
   color: ${props => props.theme.palette.text.primary};
   &:hover {
@@ -55,9 +54,9 @@ const Container = styled.div`
 const LeftSide = styled.div`
   position: relative;
   width: 300px;
-  padding: 20px;
+  padding: 40px;
   height: 100%;
-  transition: 1s ease-in-out;
+  transition: 0.3s ease-in-out;
   transform: translateX(
     ${({ transitionState }) =>
       transitionState === 'entering' || transitionState === 'entered'
@@ -66,7 +65,7 @@ const LeftSide = styled.div`
   );
   background: ${props => props.theme.palette.secondary.main};
   & div {
-    margin: 2px 0;
+    margin: 10px 0;
   }
   p {
     margin-top: 1em;
@@ -75,17 +74,20 @@ const LeftSide = styled.div`
 `;
 
 const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
+  margin: 20px 0 !important;
 `;
 
 const Background = styled.div`
   width: 100%;
   display: flex;
-  text-align: center;
   justify-content: center;
   align-items: center;
   video {
-    transition: 1s ease-in-out;
+    transition: 0.3s ease-in-out;
     transform: translateX(
       ${({ transitionState }) =>
         transitionState === 'entering' || transitionState === 'entered'
@@ -106,12 +108,12 @@ const Header = styled.div`
 
 const Footer = styled.div`
   position: absolute;
-  bottom: 59px;
+  bottom: 4px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: calc(85%);
+  width: calc(100% - 80px);
 `;
 
 const Status = styled.div`
@@ -224,18 +226,12 @@ const Login = () => {
         <Container>
           <LeftSide transitionState={transitionState}>
             <Header>
-              <img
-                src={HorizontalLogo}
-                height="95px"
-                width="220px"
-                alt="Logo"
-                draggable="false"
-                pointerCursor
-              />{' '}
+              <HorizontalLogo size={200} />
             </Header>
-            <center>
-              <h4>Sign in with your Mojang Account</h4>
-            </center>
+            <p>
+              Sign in with your Mojang Account. By doing so, you accept all our
+              policies and terms stated below.
+            </p>
             <Form>
               <div>
                 <Input
@@ -256,30 +252,25 @@ const Login = () => {
                 <LoginFailMessage>{loginFailed?.message}</LoginFailMessage>
               )}
               <LoginButton color="primary" onClick={authenticate}>
-                <h5>
-                  Sign In
-                  <FontAwesomeIcon
-                    css={`
-                      margin-top: 0;
-                      margin-left: 6px;
-                    `}
-                    icon={faArrowRight}
-                  />
-                </h5>
+                Sign In
+                <FontAwesomeIcon
+                  css={`
+                    margin-left: 6px;
+                  `}
+                  icon={faArrowRight}
+                />
               </LoginButton>
               <MicrosoftLoginButton
                 color="primary"
                 onClick={authenticateMicrosoft}
               >
-                <h5>
-                  Sign in with Microsoft
-                  <FontAwesomeIcon
-                    css={`
-                      margin-left: 6px;
-                    `}
-                    icon={faExternalLinkAlt}
-                  />
-                </h5>
+                Sign in with Microsoft
+                <FontAwesomeIcon
+                  css={`
+                    margin-left: 6px;
+                  `}
+                  icon={faExternalLinkAlt}
+                />
               </MicrosoftLoginButton>
             </Form>
             <Footer>
@@ -289,18 +280,11 @@ const Login = () => {
                   justify-content: space-between;
                   align-items: flex-end;
                   width: 100%;
-                  height: 10%;
-                  margin-bottom: 50px;
                 `}
               >
                 <FooterLinks>
                   <div>
-                    <a href="https://www.minecraft.net/en-us/store/minecraft-java-edition/buy">
-                      CREATE AN ACCOUNT
-                    </a>
-                  </div>
-                  <div>
-                    <a href="https://www.minecraft.net/en-us/password/forgot/">
+                    <a href="https://www.minecraft.net/it-it/password/forgot">
                       FORGOT PASSWORD
                     </a>
                   </div>
@@ -309,10 +293,47 @@ const Login = () => {
                   css={`
                     cursor: pointer;
                   `}
-                  onClick={() => dispatch(openModal('Changelogs'))}
+                  onClick={() => dispatch(openModal('ChangeLogs'))}
                 >
                   v{version}
                 </div>
+              </div>
+              <div
+                css={`
+                  margin-top: 20px;
+                  display: flex;
+                  width: 100%;
+                  text-align: center;
+                  flex-direction: row;
+                  span {
+                    text-decoration: underline;
+                    cursor: pointer;
+                  }
+                `}
+              >
+                <span
+                  onClick={() =>
+                    dispatch(openModal('PolicyModal', { policy: 'privacy' }))
+                  }
+                >
+                  Privacy Policy
+                </span>
+                <span
+                  onClick={() =>
+                    dispatch(openModal('PolicyModal', { policy: 'tos' }))
+                  }
+                >
+                  Terms and Conditions
+                </span>
+                <span
+                  onClick={() =>
+                    dispatch(
+                      openModal('PolicyModal', { policy: 'acceptableuse' })
+                    )
+                  }
+                >
+                  Acceptable Use Policy
+                </span>
               </div>
               <Status>
                 Auth: <StatusIcon color={status['authserver.mojang.com']} />
@@ -327,10 +348,7 @@ const Login = () => {
               <source src={backgroundVideo} type="video/webm" />
             </video>
           </Background>
-          <Loading transitionState={transitionState}>
-            {' '}
-            <FontAwesomeIcon spin size="4x" icon={faSpinner} />
-          </Loading>
+          <Loading transitionState={transitionState}>Loading...</Loading>
         </Container>
       )}
     </Transition>

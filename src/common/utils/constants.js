@@ -1,6 +1,8 @@
 // Java Manifest
 export const MAVEN_REPO = 'http://central.maven.org/maven2';
 export const JAVA_MANIFEST_URL = 'https://cdn.assets-gdevs.com/openjdk8.json';
+export const JAVA16_MANIFEST_URL =
+  'https://cdn.assets-gdevs.com/openjdk16.json';
 export const MC_LIBRARIES_URL = 'https://libraries.minecraft.net';
 export const LJF_URL =
   'https://dist.creeper.host/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar';
@@ -43,7 +45,7 @@ export const CURSEFORGE = 'curseforge';
 export const FTB = 'ftb';
 
 // API Keys
-export const IMGUR_API_KEY = '509a564cf4466c9';
+export const IMGUR_CLIENT_ID = '509a564cf4466c9';
 export const PASTEBIN_API_KEY = '478d52a29c7e952ba116d09bd9625fde';
 
 // Account Types
