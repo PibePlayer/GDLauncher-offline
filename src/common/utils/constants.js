@@ -1,8 +1,9 @@
 // Java Manifest
 export const MAVEN_REPO = 'http://central.maven.org/maven2';
-export const JAVA_MANIFEST_URL = 'https://cdn.assets-gdevs.com/openjdk8.json';
+export const JAVA_MANIFEST_URL =
+  'https://api.adoptopenjdk.net/v2/latestAssets/releases/openjdk8?arch=x64&heap_size=normal&openjdk_impl=hotspot&type=jre';
 export const JAVA16_MANIFEST_URL =
-  'https://cdn.assets-gdevs.com/openjdk16.json';
+  'https://api.adoptopenjdk.net/v2/latestAssets/releases/openjdk16?arch=x64&heap_size=normal&openjdk_impl=hotspot&type=jre';
 export const MC_LIBRARIES_URL = 'https://libraries.minecraft.net';
 export const LJF_URL =
   'https://dist.creeper.host/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar';
