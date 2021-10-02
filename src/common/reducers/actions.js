@@ -42,7 +42,6 @@ import {
   CURSEFORGE,
   FABRIC,
   FTB,
-  MC_RESOURCES_URL,
   MC_STARTUP_METHODS,
   NEWS_URL
 } from '../utils/constants';

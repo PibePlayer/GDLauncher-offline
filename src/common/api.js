@@ -7,24 +7,16 @@ import {
   MC_MANIFEST_URL,
   FABRIC_APIS,
   JAVA_MANIFEST_URL,
-<<<<<<< HEAD
   IMGUR_API_KEY,
   FORGESVC_CATEGORIES,
-=======
-  IMGUR_CLIENT_ID,
->>>>>>> 7cf4f3a34cb6b4771308a86dce98ab22e59b1836
   MICROSOFT_LIVE_LOGIN_URL,
   MICROSOFT_XBOX_LOGIN_URL,
   MICROSOFT_XSTS_AUTH_URL,
   MINECRAFT_SERVICES_URL,
   FTB_API_URL,
-<<<<<<< HEAD
   PASTEBIN_API_KEY,
-  JAVA16_MANIFEST_URL
-=======
   JAVA16_MANIFEST_URL,
   GDL_SERVE_API
->>>>>>> 7cf4f3a34cb6b4771308a86dce98ab22e59b1836
 } from './utils/constants';
 import { sortByDate } from './utils';
 import ga from './utils/analytics';
