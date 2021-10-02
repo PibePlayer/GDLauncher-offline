@@ -1325,7 +1325,7 @@ export function downloadForge(instanceName) {
       let prev = 0;
       await downloadFile(
         tempInstaller,
-        `${baseUrl}/${loader?.loaderVersion}/forge-${loader?.loaderVersion}-${urlTerminal}`,
+        `${baseUrl}/${loader?.mcVersion}-${loader?.loaderVersion}/forge-${loader?.mcVersion}-${loader?.loaderVersion}-${urlTerminal}`,
         p => {
           const progress = parseInt(p, 10) / 100;
           if (progress !== prev) {
