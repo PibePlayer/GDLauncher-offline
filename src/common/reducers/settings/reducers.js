@@ -4,6 +4,7 @@ import {
   DEFAULT_JAVA_ARGS,
   DEFAULT_MEMORY
 } from '../../../app/desktop/utils/constants';
+import { MC_STARTUP_METHODS } from '../../utils/constants';
 
 function sounds(state = true, action) {
   switch (action.type) {
@@ -19,6 +20,16 @@ function releaseChannel(state = 0, action) {
   switch (action.type) {
     case ActionTypes.UPDATE_RELEASE_CHANNEL:
       return action.releaseChannel;
+    default:
+      return state;
+  }
+}
+
+// 0 is Alphabetical, 1 is last played, 2 is most played
+function instanceSortOrder(state = 0, action) {
+  switch (action.type) {
+    case ActionTypes.UPDATE_INSTANCE_SORT_METHOD:
+      return action.value;
     default:
       return state;
   }
@@ -95,6 +106,15 @@ function minecraftSettings(
   }
 }
 
+function mcStartupMethod(state = MC_STARTUP_METHODS.DEFAULT, action) {
+  switch (action.type) {
+    case ActionTypes.UPDATE_MC_STARTUP_METHOD:
+      return action.method;
+    default:
+      return state;
+  }
+}
+
 function java(
   state = {
     path: null,
@@ -123,6 +143,7 @@ function java(
 export default combineReducers({
   sounds,
   releaseChannel,
+  instanceSortOrder,
   concurrentDownloads,
   discordRPC,
   hideWindowOnGameLaunch,
@@ -130,5 +151,6 @@ export default combineReducers({
   showNews,
   curseReleaseChannel,
   java,
-  minecraftSettings
+  minecraftSettings,
+  mcStartupMethod
 });

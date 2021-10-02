@@ -1,4 +1,48 @@
+<<<<<<< HEAD
 # Koala Launcher [![Discord][discordImg]][discordLink] [![CI][ciImg]][ciLink] [![GHReleases][ghrImg]][ghrLink]
+=======
+# GDLauncher
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity) 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
+[![GitHub issues](https://img.shields.io/github/issues-raw/gorilla-devs/GDLauncher.svg)](https://github.com/gorilla-devs/GDLauncher/issues) 
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/gorilla-devs/GDLauncher.svg)](https://github.com/gorilla-devs/GDLauncher/pulls) 
+![Discord](https://img.shields.io/discord/398091532881756161.svg)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/gorilla-devs/GDLauncher.svg) 
+![](https://img.shields.io/github/release/gorilla-devs/GDLauncher.svg?style=flat)
+![Github All Releases](https://img.shields.io/github/downloads/gorilla-devs/GDLauncher/total.svg)
+
+## 🦺 Support this project
+
+<a href='https://ko-fi.com/gdlauncher' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+## 🎉 Join our community
+
+<a href='https://discord.gdlauncher.com' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.gdlauncher.com/assets/socials/Discord-Logo+Wordmark-Color.png' border='0' alt='GDLauncher Discord Server' /></a>
+<details>
+ <summary><strong>Table of Contents</strong> (click to expand)
+</summary>
+
+- [GDLauncher](#gdlauncher)
+  - [🦺 Support this project](#-support-this-project)
+  - [🎉 Join our community](#-join-our-community)
+  - [🎮 What is GDLauncher](#-what-is-gdlauncher)
+  - [⚡️ Comparison with Twitch Launcher](#️-comparison-with-twitch-launcher)
+  - [🚀 Getting Started](#-getting-started)
+  - [🎮 Download](#-download)
+  - [🎨 Features](#-features)
+      - [Our features:](#our-features)
+      - [You can also:](#you-can-also)
+      - [Some of the features we are still working on are:](#some-of-the-features-we-are-still-working-on-are)
+  - [💾 Compilation](#-compilation)
+    - [⚙️ Requirements](#️-requirements)
+    - [▶️ Steps](#️-steps)
+    - [🚚 Packaging](#-packaging)
+  - [🚀 Technologies](#-technologies)
+  - [🎁 Contributing](#-contributing)
+  - [❤️ Author](#️-author)
+  - [📜 History](#-history)
+  - [🎓 License](#-license)
+  </details>
+>>>>>>> 7cf4f3a34cb6b4771308a86dce98ab22e59b1836
 
 ![Javascript][javascriptImg] ![Love][buildLoveImg]
 

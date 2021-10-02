@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+zimport React, { useState, useEffect, memo } from 'react';
 import styled from 'styled-components';
 import { ipcRenderer, clipboard } from 'electron';
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,11 +21,30 @@ import {
 import HorizontalLogo from '../../../../ui/HorizontalLogo.png';
 import { updateConcurrentDownloads } from '../../../reducers/actions';
 import { openModal } from '../../../reducers/modals/actions';
+import HorizontalLogo from '../../../../ui/HorizontalLogo';
 import { extractFace } from '../../../../app/desktop/utils';
 
-const MyAccountPrf = styled.div`
+const Title = styled.div`
+  margin-top: 30px;
+  margin-bottom: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  color: ${props => props.theme.palette.text.primary};
+  z-index: 1;
+  text-align: left;
+  -webkit-backface-visibility: hidden;
+`;
+
+const Content = styled.div`
   width: 100%;
-  height: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  *:first-child {
+    margin-right: 15px;
+  }
 `;
 
 const PersonalData = styled.div`
@@ -36,16 +55,6 @@ const PersonalData = styled.div`
 const MainTitle = styled.h1`
   color: ${props => props.theme.palette.text.primary};
   margin: 0 500px 20px 0;
-  margin-bottom: 20px;
-`;
-
-const Title = styled.div`
-  font-size: 15px;
-  font-weight: 700;
-  color: ${props => props.theme.palette.text.primary};
-  z-index: 1;
-  text-align: left;
-  -webkit-backface-visibility: hidden;
 `;
 
 const ProfileImage = styled.img`
@@ -181,10 +190,11 @@ function dashUuid(UUID) {
 }
 
 const General = () => {
-  const [version, setVersion] = useState(null);
-  const [releaseChannel, setReleaseChannel] = useState(null);
+  /* eslint-disable prettier/prettier */
+  const tempPath = useSelector(_getTempPath);
+  const dataStorePath = useSelector(_getDataStorePath);
+  const instancesPath = useSelector(_getInstancesPath);
   const currentAccount = useSelector(_getCurrentAccount);
-
   const potatoPcMode = useSelector(state => state.settings.potatoPcMode);
   const concurrentDownloads = useSelector(
     state => state.settings.concurrentDownloads
@@ -195,6 +205,22 @@ const General = () => {
   const curseReleaseChannel = useSelector(
     state => state.settings.curseReleaseChannel
   );
+  const hideWindowOnGameLaunch = useSelector(
+    state => state.settings.hideWindowOnGameLaunch
+  );
+  const instanceSortMethod = useSelector(
+    state => state.settings.instanceSortOrder
+  );
+  /* eslint-enable */
+
+  const [dataPath, setDataPath] = useState(userData);
+  const [copiedUuid, setCopiedUuid] = useState(false);
+  const [moveUserData, setMoveUserData] = useState(false);
+  const [deletingInstances, setDeletingInstances] = useState(false);
+  const [loadingMoveUserData, setLoadingMoveUserData] = useState(false);
+  const [version, setVersion] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
+  const [releaseChannel, setReleaseChannel] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -213,26 +239,27 @@ const General = () => {
   }, []);
 
   return (
-    <MyAccountPrf>
+    <>
       <PersonalData>
         <MainTitle>General</MainTitle>
         <PersonalDataContainer>
-          {profileImage ? (
-            <ProfileImage src={`data:image/jpeg;base64,${profileImage}`} />
-          ) : (
-            <ImagePlaceHolder />
-          )}
+          <ProfileImage
+            src={profileImage ? `data:image/jpeg;base64,${profileImage}` : null}
+          />
           <div
             css={`
               margin: 20px 20px 20px 40px;
               width: 330px;
+              * {
+                text-align: left;
+              }
             `}
           >
-            <UsernameContainer>
+            <div>
               Username <br />
               <Username>{currentAccount.selectedProfile.name}</Username>
-            </UsernameContainer>
-            <UuidContainer>
+            </div>
+            <div>
               UUID
               <br />
               <Uuid>
@@ -242,8 +269,7 @@ const General = () => {
                     css={`
                       width: 13px;
                       height: 14px;
-                      margin: 0;
-                      margin-left: 10px;
+                      margin: 0 0 0 10px;
                     `}
                   >
                     <FontAwesomeIcon
@@ -258,7 +284,7 @@ const General = () => {
                   </div>
                 </Tooltip>
               </Uuid>
-            </UuidContainer>
+            </div>
           </div>
         </PersonalDataContainer>
       </PersonalData>
@@ -307,16 +333,34 @@ const General = () => {
             margin: 0;
             width: 450px;
           `}
+          onChange={async e => {
+            const appData = await ipcRenderer.invoke('getAppdataPath');
+            setReleaseChannel(e);
+            await fsa.writeFile(
+              path.join(appData, 'gdlauncher_next', 'rChannel'),
+              e.toString()
+            );
+          }}
+          value={releaseChannel}
+          virtual={false}
         >
+          <Select.Option value={0}>Stable</Select.Option>
+          <Select.Option value={1}>Beta</Select.Option>
+        </Select>
+      </Content>
+      <Title>
+        Concurrent Downloads &nbsp; <FontAwesomeIcon icon={faTachometerAlt} />
+      </Title>
+      <Content>
+        <p>
           Select the number of concurrent downloads. If you have a slow
-          connection, select max 3
+          connection, select at most 3.
         </p>
-
         <Select
           onChange={v => dispatch(updateConcurrentDownloads(v))}
           value={concurrentDownloads}
           css={`
-            width: 100px;
+            width: 70px;
             text-align: start;
           `}
           virtual={false}
@@ -329,13 +373,12 @@ const General = () => {
               </Select.Option>
             ))}
         </Select>
-      </ParallelDownload>
-      <Hr />
+      </Content>
       <Title>
         Preferred CurseForge Release Channel &nbsp;{' '}
         <FontAwesomeIcon icon={faFire} />
       </Title>
-      <ParallelDownload>
+      <Content>
         <p
           css={`
             margin: 0;
@@ -378,7 +421,7 @@ const General = () => {
           `}
         >
           You got a potato PC? Don&apos;t worry! We got you covered. Enable this
-          and all animations and special effects will be disabled
+          and all animations and special effects will be disabled.
         </p>
         <Switch
           onChange={e => {
@@ -421,8 +464,8 @@ const General = () => {
         </div>
         <p>
           {updateAvailable
-            ? 'There is an update available to be installed. Click on update to install it and restart the launcher'
-            : 'You’re currently on the latest version. We automatically check for updates and we will inform you whenever one is available'}
+            ? 'There is an update available to be installed. Click on update to install it and restart the launcher.'
+            : 'You’re currently on the latest version. We automatically check for updates and we will inform you whenever one is available.'}
         </p>
         <div
           css={`
@@ -458,7 +501,7 @@ const General = () => {
           )}
         </div>
       </LauncherVersion>
-    </MyAccountPrf>
+    </>
   );
 };
 

@@ -16,7 +16,7 @@ import { openModal } from '../../../common/reducers/modals/actions';
 import {
   checkForPortableUpdates,
   updateUpdateAvailable,
-  getAppLatestVersion
+  isNewVersionAvailable
 } from '../../../common/reducers/actions';
 import Logo from '../../../ui/Logo';
 
@@ -52,7 +52,7 @@ const SystemNavbar = () => {
         .then(v => dispatch(updateUpdateAvailable(Boolean(v))))
         .catch(console.error);
     } else {
-      dispatch(getAppLatestVersion())
+      dispatch(isNewVersionAvailable())
         .then(v => dispatch(updateUpdateAvailable(Boolean(v))))
         .catch(console.error);
     }
@@ -168,10 +168,11 @@ const SystemNavbar = () => {
             `}
           >
             <a
-              href="https://gdevs.io/"
+              href="https://koalalauncher.com/"
               rel="noopener noreferrer"
               css={`
-                margin-top: 2px;
+                margin-top: 5px;
+                margin-right: 5px;
                 -webkit-app-region: no-drag;
               `}
             >
@@ -261,6 +262,7 @@ const SystemNavbar = () => {
               rel="noopener noreferrer"
               css={`
                 margin-top: 5px;
+                margin-right: 5px;
                 -webkit-app-region: no-drag;
               `}
             >

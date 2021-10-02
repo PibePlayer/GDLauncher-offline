@@ -347,31 +347,68 @@ export const isLatestJavaDownloaded = async (
 
 export const get7zPath = async () => {
   // Get userData from ipc because we can't always get this from redux
-  const baseDir = await ipcRenderer.invoke('getUserData');
-  if (process.platform === 'darwin' || process.platform === 'linux') {
+  let baseDir = await ipcRenderer.invoke('getExecutablePath');
+  const isDev = process.env.NODE_ENV === 'development';
+  if (isDev) {
+    baseDir = path.resolve(baseDir, '../../');
+    if (process.platform === 'win32') {
+      baseDir = path.join(baseDir, '7zip-bin/win/x64');
+    } else if (process.platform === 'linux') {
+      baseDir = path.join(baseDir, '7zip-bin/linux/x64');
+    } else if (process.platform === 'darwin') {
+      baseDir = path.resolve(baseDir, '../../../', '7zip-bin/mac/x64');
+    }
+  }
+  if (process.platform === 'linux') {
     return path.join(baseDir, '7za');
+  }
+  if (process.platform === 'darwin') {
+    return path.resolve(baseDir, isDev ? '' : '../', '7za');
   }
   return path.join(baseDir, '7za.exe');
 };
 
+get7zPath();
+
+export const extractAll = async (
+  source,
+  destination,
+  args = {},
+  funcs = {}
+) => {
+  const sevenZipPath = await get7zPath();
+  const extraction = extractFull(source, destination, {
+    ...args,
+    yes: true,
+    $bin: sevenZipPath,
+    $spawnOptions: { shell: true }
+  });
+  await new Promise((resolve, reject) => {
+    if (funcs.progress) {
+      extraction.on('progress', ({ percent }) => {
+        funcs.progress(percent);
+      });
+    }
+    extraction.on('end', () => {
+      funcs.end?.();
+      resolve();
+    });
+    extraction.on('error', err => {
+      funcs.error?.();
+      reject(err);
+    });
+  });
+  return extraction;
+};
+
 export const extractNatives = async (libraries, instancePath) => {
   const extractLocation = path.join(instancePath, 'natives');
-  const sevenZipPath = await get7zPath();
   await Promise.all(
     libraries
       .filter(l => l.natives)
       .map(async l => {
-        const extraction = extractFull(l.path, extractLocation, {
-          $bin: sevenZipPath,
+        await extractAll(l.path, extractLocation, {
           $raw: ['-xr!META-INF']
-        });
-        await new Promise((resolve, reject) => {
-          extraction.on('end', () => {
-            resolve();
-          });
-          extraction.on('error', err => {
-            reject(err);
-          });
         });
       })
   );
@@ -625,20 +662,10 @@ export const getJVMArguments113 = (
   return args;
 };
 
-export const readJarManifest = async (jarPath, sevenZipPath, property) => {
-  const list = extractFull(jarPath, '.', {
-    $bin: sevenZipPath,
+export const readJarManifest = async (jarPath, property) => {
+  const list = await extractAll(jarPath, '.', {
     toStdout: true,
     $cherryPick: 'META-INF/MANIFEST.MF'
-  });
-
-  await new Promise((resolve, reject) => {
-    list.on('end', () => {
-      resolve();
-    });
-    list.on('error', error => {
-      reject(error.stderr);
-    });
   });
 
   if (list.info.has(property)) return list.info.get(property);
@@ -701,12 +728,7 @@ export const patchForge113 = async (
         cp => `"${path.join(librariesPath, ...mavenToArray(cp))}"`
       );
 
-      const sevenZipPath = await get7zPath();
-      const mainClass = await readJarManifest(
-        filePath,
-        sevenZipPath,
-        'Main-Class'
-      );
+      const mainClass = await readJarManifest(filePath, 'Main-Class');
 
       await new Promise(resolve => {
         const ps = spawn(
@@ -761,19 +783,10 @@ export const importAddonZip = async (
   await new Promise(resolve => {
     setTimeout(() => resolve(), 500);
   });
-  const sevenZipPath = await get7zPath();
-  const extraction = extractFull(tempZipFile, instancePath, {
-    $bin: sevenZipPath,
+
+  await extractAll(tempZipFile, instancePath, {
     yes: true,
     $cherryPick: 'manifest.json'
-  });
-  await new Promise((resolve, reject) => {
-    extraction.on('end', () => {
-      resolve();
-    });
-    extraction.on('error', err => {
-      reject(err.stderr);
-    });
   });
   const manifest = await fse.readJson(instanceManifest);
   return manifest;
@@ -788,19 +801,10 @@ export const downloadAddonZip = async (id, fileID, instancePath, tempPath) => {
   await new Promise(resolve => {
     setTimeout(() => resolve(), 500);
   });
-  const sevenZipPath = await get7zPath();
-  const extraction = extractFull(zipFile, instancePath, {
-    $bin: sevenZipPath,
+
+  await extractAll(zipFile, instancePath, {
     yes: true,
     $cherryPick: 'manifest.json'
-  });
-  await new Promise((resolve, reject) => {
-    extraction.on('end', () => {
-      resolve();
-    });
-    extraction.on('error', err => {
-      reject(err.stderr);
-    });
   });
   const manifest = await fse.readJson(instanceManifest);
   return manifest;

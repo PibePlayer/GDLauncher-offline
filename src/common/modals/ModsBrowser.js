@@ -94,6 +94,168 @@ const ModsListWrapper = ({
     />
   ));
 
+  const Row = memo(({ index, style, data }) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const curseReleaseChannel = useSelector(
+      state => state.settings.curseReleaseChannel
+    );
+    const dispatch = useDispatch();
+    const { instanceName, gameVersion, installedMods, instance } = data;
+
+    const item = items[index];
+
+    const isInstalled = installedMods.find(v => v.projectID === item?.id);
+    const primaryImage = (item?.attachments || []).find(v => v?.isDefault);
+
+    if (!item) {
+      return (
+        <ModsLoader
+          hasNextPage={hasNextPage}
+          isNextPageLoading={isNextPageLoading}
+          width={width - 10}
+          loadNextPage={loadNextPage}
+          top={style.top + 15}
+        />
+      );
+    }
+
+    return (
+      <RowContainer
+        isInstalled={isInstalled}
+        style={{
+          ...style,
+          top: style.top + 15,
+          height: style.height - 15,
+          position: 'absolute',
+          margin: '15px 10px',
+          transition: 'height 0.2s ease-in-out'
+        }}
+      >
+        {isInstalled && <ModInstalledIcon icon={faCheckCircle} />}
+        {isInstalled && <ModsIconBg />}
+
+        <RowInnerContainer>
+          <RowContainerImg
+            style={{
+              backgroundImage: `url('${primaryImage?.thumbnailUrl}')`
+            }}
+          />
+          <div
+            css={`
+              color: ${props => props.theme.palette.text.third};
+              &:hover {
+                color: ${props => props.theme.palette.text.primary};
+              }
+              transition: color 0.1s ease-in-out;
+              cursor: pointer;
+            `}
+            onClick={() => {
+              dispatch(
+                openModal('ModOverview', {
+                  gameVersion,
+                  projectID: item.id,
+                  ...(isInstalled && { fileID: isInstalled.fileID }),
+                  ...(isInstalled && { fileName: isInstalled.fileName }),
+                  instanceName
+                })
+              );
+            }}
+          >
+            {item.name}
+          </div>
+        </RowInnerContainer>
+        {!isInstalled ? (
+          error || (
+            <div>
+              <Button
+                type="primary"
+                onClick={async e => {
+                  setLoading(true);
+                  e.stopPropagation();
+                  const files = (await getAddonFiles(item?.id)).data;
+
+                  const isFabric = getPatchedInstanceType(instance) === FABRIC;
+                  const isForge = getPatchedInstanceType(instance) === FORGE;
+
+                  let filteredFiles = [];
+
+                  if (isFabric) {
+                    filteredFiles = filterFabricFilesByVersion(
+                      files,
+                      gameVersion
+                    );
+                  } else if (isForge) {
+                    filteredFiles = filterForgeFilesByVersion(
+                      files,
+                      gameVersion
+                    );
+                  }
+
+                  const preferredFile = getFirstPreferredCandidate(
+                    filteredFiles,
+                    curseReleaseChannel
+                  );
+
+                  if (preferredFile === null) {
+                    setLoading(false);
+                    setError('Mod Not Available');
+                    console.error(
+                      `Could not find any release candidate for addon: ${item?.id} / ${gameVersion}`
+                    );
+                    return;
+                  }
+
+                  let prev = 0;
+                  await dispatch(
+                    installMod(
+                      item?.id,
+                      preferredFile?.id,
+                      instanceName,
+                      gameVersion,
+                      true,
+                      p => {
+                        if (parseInt(p, 10) !== prev) {
+                          prev = parseInt(p, 10);
+                          ipcRenderer.invoke(
+                            'update-progress-bar',
+                            parseInt(p, 10) / 100
+                          );
+                        }
+                      }
+                    )
+                  );
+                  ipcRenderer.invoke('update-progress-bar', 0);
+                  setLoading(false);
+                }}
+                loading={loading}
+              >
+                <FontAwesomeIcon icon={faDownload} />
+              </Button>
+            </div>
+          )
+        ) : (
+          <Button
+            type="primary"
+            onClick={() => {
+              dispatch(
+                openModal('ModOverview', {
+                  gameVersion,
+                  projectID: item.id,
+                  ...(isInstalled && { fileID: isInstalled.fileID }),
+                  ...(isInstalled && { fileName: isInstalled.fileName }),
+                  instanceName
+                })
+              );
+            }}
+          >
+            <FontAwesomeIcon icon={faWrench} />
+          </Button>
+        )}
+      </RowContainer>
+    );
+  });
+
   return (
     <InfiniteLoader
       isItemLoaded={isItemLoaded}
@@ -173,7 +335,7 @@ const Row = ({ index, style, data }) => {
     border-radius: 12px;
     padding: 10px 25px;
     background: ${props => props.theme.palette.grey[800]};
-    ${props =>
+    ${props =>z
       isInstalled && `border: 4px solid ${props.theme.palette.colors.green};`}
   `;
 
@@ -395,7 +557,7 @@ const ModsBrowser = ({ instanceName, gameVersion }) => {
             css={`
               height: 32px !important;
             `}
-            placeholder="Search"
+            placeholder="Search..."
             value={searchQuery}
             onChange={e => {
               setSearchQuery(e.target.value);

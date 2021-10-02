@@ -181,7 +181,7 @@ const Overview = ({ instanceName, background, manifest }) => {
   const instancesPath = useSelector(_getInstancesPath);
   const config = useSelector(state => _getInstance(state)(instanceName));
   const javaVersion = dispatch(
-    getJavaVersionForMCVersion(config?.loader.mcVersion)
+    getJavaVersionForMCVersion(config?.loader?.mcVersion)
   );
   const [javaLocalMemory, setJavaLocalMemory] = useState(config?.javaMemory);
   const [javaLocalArguments, setJavaLocalArguments] = useState(

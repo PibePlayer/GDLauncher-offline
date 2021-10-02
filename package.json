@@ -76,9 +76,6 @@
   "cpu": [
     "x64"
   ],
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -119,7 +116,7 @@
     "concurrently": "^6.2.1",
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
-    "electron": "^13.1.9",
+    "electron": "^15.1.0",
     "electron-builder": "^22.11.7",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -147,8 +144,8 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "7zip-bin": "^5.1.1",
     "@loadable/babel-plugin": "^5.13.2",
+    "7zip-bin": "^5.1.1",
     "antd": "4.16.11",
     "axios": "^0.21.1",
     "base64-stream": "^1.0.0",
@@ -164,6 +161,7 @@
     "@fontsource/averia-sans-libre": "^4.1.0",
     "fs-extra": "^10.0.0",
     "get-stream": "^6.0.1",
+    "he": "^1.2.0",
     "history": "^4.10.1",
     "inter-ui": "^3.19.3",
     "is-electron": "^2.2.0",
