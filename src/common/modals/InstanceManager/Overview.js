@@ -183,6 +183,9 @@ const Overview = ({ instanceName, background, manifest }) => {
   const javaVersion = dispatch(
     getJavaVersionForMCVersion(config?.loader?.mcVersion)
   );
+  const defaultJavaPath = useSelector(state =>
+    _getJavaPath(state)(javaVersion)
+  );
   const [javaLocalMemory, setJavaLocalMemory] = useState(config?.javaMemory);
   const [javaLocalArguments, setJavaLocalArguments] = useState(
     config?.javaArgs
@@ -295,9 +298,8 @@ const Overview = ({ instanceName, background, manifest }) => {
             display: flex;
             justify-content: space-between;
             width: 100% + 20px;
-            margin-top: 15px;
             margin-left: -20px;
-            margin-bottom: 15px;
+            margin-top: 20px;
           `}
         >
           <Card

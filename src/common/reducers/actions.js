@@ -41,9 +41,9 @@ import {
   ACCOUNT_MOJANG,
   CURSEFORGE,
   FABRIC,
+  LITELOADER,
   FTB,
-  MC_STARTUP_METHODS,
-  NEWS_URL
+  MC_STARTUP_METHODS
 } from '../utils/constants';
 import {
   getAddon,
@@ -69,7 +69,6 @@ import {
   msExchangeCodeForAccessToken,
   msMinecraftProfile,
   msOAuthRefresh,
-  getJava16Manifest,
   getLiteLoaderManifest,
   getLiteLoaderJson
 } from '../api';
@@ -752,7 +751,7 @@ export function loginOAuth(redirect = true) {
       } catch (error) {
         console.error(error);
         throw new Error(
-          'Error occurred while fetching token from Xbox Secure Token Service.'
+          'Error occurred while fetching token from Xbox Secure Token Service. Are you under 18?'
         );
       }
 
@@ -3146,7 +3145,7 @@ export const isNewVersionAvailable = async () => {
 
   try {
     const rChannel = await fs.readFile(
-      path.join(appData, 'gdlauncher_next', 'rChannel')
+      path.join(appData, 'koalalauncher', 'rChannel')
     );
     releaseChannel = parseInt(rChannel.toString(), 10);
   } catch {

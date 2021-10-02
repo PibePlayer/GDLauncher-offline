@@ -8,7 +8,6 @@ import {
   FABRIC_APIS,
   JAVA_MANIFEST_URL,
   IMGUR_API_KEY,
-  FORGESVC_CATEGORIES,
   MICROSOFT_LIVE_LOGIN_URL,
   MICROSOFT_XBOX_LOGIN_URL,
   MICROSOFT_XSTS_AUTH_URL,
@@ -191,7 +190,7 @@ export const imgurPost = (image, onProgress) => {
 
   return axios.post('https://api.imgur.com/3/image', bodyFormData, {
     headers: {
-      Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
+      Authorization: `Client-ID ${IMGUR_API_KEY}`
     },
     ...(onProgress && { onUploadProgress: onProgress })
   });

@@ -46,6 +46,7 @@ export const PASTEBIN_API_KEY = '478d52a29c7e952ba116d09bd9625fde';
 export const FABRIC = 'fabric';
 export const FORGE = 'forge';
 export const VANILLA = 'vanilla';
+export const LITELOADER = 'liteloader';
 
 // Sources
 export const CURSEFORGE = 'curseforge';
