@@ -3,7 +3,7 @@
 ![Javascript][javascriptImg] ![Love][buildLoveImg]
 
 # ❓ What is the Koala Launcher
-Koala Launcher is a fork of KoalaLauncher aiming to be more FOSS Friendy towards Pull Requests and Contribution
+Koala Launcher is a fork of GDLauncher aiming to be more FOSS Friendy towards Pull Requests and Contribution
 
 <p align="center">
     <img width="800" height="auto" src="https://i.ibb.co/Fb5yzcz/image.png" alt="KoalaLauncher Home" />
